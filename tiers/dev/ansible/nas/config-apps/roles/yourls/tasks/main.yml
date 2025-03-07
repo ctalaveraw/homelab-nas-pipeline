@@ -1,0 +1,47 @@
+---
+- name: YoURLs MySQL Container
+  docker_container:
+    name: "{{ yourls_db_container_name }}"
+    # name: "mysql"
+    # image: mysql:5.7
+    image: mysql
+    pull: true
+    restart_policy: always
+    env:
+      TZ: "{{ ansible_nas_timezone }}"
+      # MYSQL_ROOT_PASSWORD: "{{ yourls_db_pass }}"
+      # MYSQL_DATABASE: "mysql"
+      MYSQL_DATABASE: "{{ yourls_db_name }}"
+      MYSQL_ROOT_PASSWORD: "example"
+
+- name: YoURLs Docker Container
+  docker_container:
+    image: "yourls:latest"
+    name: "{{ yourls_container_name }}"
+    # name: "yourls"
+    # image: "yourls:latest"
+    pull: true
+    links:
+      - "{{ yourls_db_container_name }}:{{ yourls_db_name }}"
+    memory : "{{ yourls_memory }}"
+    restart_policy: always
+    ports:
+      - "{{ yourls_port }}:80"
+    env:
+      # YOURLS_PASS: "example-password"
+      # YOURLS_DB_PASS: "{{ yourls_db_pass }}"
+      # YOURLS_SITE: "{{ yourls_config_sitename }}"
+      # YOURLS_PASS: "{{ yourls_config_password }}"
+      YOURLS_USER: "{{ yourls_config_username }}"
+      YOURLS_DB_PASS: "example"
+      YOURLS_PASS: "example"
+      # YOURLS_DB_HOST: "10.69.69.202:{{ yourls_port }}" # might not need
+      YOURLS_SITE: "https://yourls.osomatsu.boo"
+    labels:
+      traefik.enable: "{{ yourls_available_externally | string }}"
+      traefik.http.routers.yourls.rule: "Host(`{{ yourls_hostname }}.{{ ansible_nas_domain }}`)"
+      traefik.http.routers.yourls.tls.certresolver: "letsencrypt"
+      traefik.http.routers.yourls.tls.domains[0].main: "{{ ansible_nas_domain }}"
+      traefik.http.routers.yourls.tls.domains[0].sans: "*.{{ ansible_nas_domain }}"
+      traefik.http.services.yourls.loadbalancer.server.port: "80"
+

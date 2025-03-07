@@ -1,0 +1,16 @@
+---
+- name: Create pipeline-runner group
+  group:
+    name: pipeline-runner
+    state: present
+
+- name: Create pipeline-runner user
+  user:
+    name: pipeline-runner
+    state: present
+    uid: 990
+    system: yes
+    update_password: on_create
+    create_home: no
+    group: pipeline-runner
+    shell: /usr/sbin/nologin
