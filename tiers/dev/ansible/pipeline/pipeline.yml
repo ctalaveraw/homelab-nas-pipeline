@@ -1,0 +1,66 @@
+---
+- hosts: all
+
+  roles:
+    ###
+    ### Requirements
+    ###
+    - role: init-users
+      tags:
+        - init
+        - init-users
+        - users
+
+    - role: geerlingguy.docker
+      tags:
+        - docker
+        - skip_ansible_lint
+
+    ###
+    ### System setup
+    ###
+    - role: init-system
+      tags:
+        - init
+        - init-system
+        - system
+
+    - role: init-docker
+      tags:
+        - init
+        - init-docker
+        - docker
+
+    ###
+    ### Applications
+    ###
+    - role: cloudflare_ddns
+      tags:
+        - cloudflare_ddns
+      when: (cloudflare_ddns_enabled | default(False))
+    
+    - role: gitlab
+      tags:
+        - gitlab
+      when: (gitlab_enabled | default(False))
+
+    - role: gitea
+      tags:
+        - gitea
+      when: (gitea_enabled | default(False))
+
+    - role: jenkins-controller
+      tags:
+        - jenkins-controller
+        - jenkins
+      when: (jenkins_enabled | default(False))
+
+    - role: traefik
+      tags:
+        - traefik
+      when: (traefik_enabled | default(False))
+
+    - role: watchtower
+      tags:
+        - watchtower
+      when: (watchtower_enabled | default(False))

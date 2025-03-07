@@ -1,0 +1,83 @@
+---
+# - name: Configure VPN to a VPS
+- hosts: all
+  become: true
+
+  # vars_files:
+  #   - custom.yml
+  #   - secret.yml
+
+  handlers:
+    - name: Import global handlers
+      ansible.builtin.import_tasks: handlers/main.yml
+
+  roles:
+    ###
+    ### Requirements
+    ###
+
+    - role: system
+      tags:
+        - system
+
+    - role: geerlingguy.docker
+      tags:
+        - docker
+        - skip_ansible_lint
+
+    - role: docker_network
+      tags:
+        - docker
+
+    ###
+    ### Applications
+    ###
+    - role: traefik
+      tags:
+        - traefik
+      when: (traefik_enabled | default(False))
+
+    - role: cloudflare_ddns
+      tags:
+        - cloudflare_ddns
+      when: (cloudflare_ddns_enabled | default(False))
+
+    ###
+    ### Required Roles
+    ###
+
+    - role: fail2ban
+      when: enable_fail2ban | default(False)
+      tags:
+        - fail2ban
+
+    - role: dns
+      tags:
+        - dns
+      when: enable_adguard_unbound_doh | default(False)
+
+    - role: authelia
+      tags:
+        - authelia
+
+    - role: bunkerweb
+      tags:
+        - bunkerweb
+
+    - role: wireguard
+      tags:
+        - wireguard
+
+    - role: chriswayg.msmtp-mailer
+      when: email_password is defined
+      tags:
+        - msmtp
+
+    - role: ssh
+      tags:
+        - ssh
+
+    - role: watchtower
+      tags:
+        - watchtower
+      when: (watchtower_enabled | default(False)

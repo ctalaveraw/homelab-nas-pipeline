@@ -1,0 +1,15 @@
+---
+dashy_enabled: false
+dashy_available_externally: false
+
+dashy_config_directory: "{{ docker_home }}/{{ dashy_hostname }}"
+
+# network
+dashy_port: "8082"
+dashy_hostname: "dashy"
+
+# specs
+dashy_memory: 1g
+
+# docker
+dashy_container_name: dashy

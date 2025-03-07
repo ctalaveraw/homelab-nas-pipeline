@@ -1,0 +1,48 @@
+---
+- hosts: all
+
+  roles:
+    ###
+    ### Requirements
+    ###
+    - role: drive-mount
+      tags:
+        - drive-mount
+        - mount-drives
+
+    ###
+    ### MergerFS
+    ###
+    - role: mergerfs
+      tags:
+        - mergerfs
+      when: (mergerfs_enabled | default(False))
+
+    ###
+    ### snapRAID
+    ###
+    - role: snapraid
+      tags:
+        - snapraid
+      when: (snapraid_enabled | default(False))
+
+    ###
+    ### snapRAID cron scheduling
+    ###
+    - role: snapraid-cron-sync
+      tags:
+        - snapraid-cron
+        - snapraid-cron-sync
+        - cron-snapraid
+        - cron-snapraid-sync
+        - snapraid-sync-scheduling
+      when: (snapraid_cron_sync_enabled | default(False))
+
+    - role: snapraid-cron-scrub
+      tags:
+        - snapraid-cron
+        - snapraid-cron-scrub
+        - cron-snapraid
+        - cron-snapraid-scrub
+        - snapraid-scrub-scheduling
+      when: (snapraid_cron_scrub_enabled | default(False))

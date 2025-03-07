@@ -1,0 +1,30 @@
+---
+- name: Create Syncthing Directories
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - "{{ syncthing_docker_config_data_directory }}"
+
+- name: Syncthing Docker Container
+  docker_container:
+    name: "{{ syncthing_docker_config_hostname }}"
+    image: syncthing/syncthing:latest
+    pull: true
+    ports:
+      - "{{ syncthing_docker_config_port_http }}:8384"
+      - "{{ syncthing_docker_config_port_sync }}:22000/tcp"
+      - "{{ syncthing_docker_config_port_sync }}:22000/udp"
+    env:
+      PUID: "{{ syncthing_docker_config_user_id }}"
+      PGID: "{{ syncthing_docker_config_group_id }}"
+    volumes: "{{ syncthing_docker_config_volumes }}"
+    restart_policy: unless-stopped
+    memory : "{{ syncthing_docker_config_memory }}"
+    labels:
+      traefik.enable: "{{ syncthing_docker_config_available_externally | string }}"
+      traefik.http.routers.syncthing-docker-config.rule: "Host(`{{ syncthing_docker_config_hostname }}.{{ ansible_nas_domain }}`)"
+      traefik.http.routers.syncthing-docker-config.tls.certresolver: "letsencrypt"
+      traefik.http.routers.syncthing-docker-config.tls.domains[0].main: "{{ ansible_nas_domain }}"
+      traefik.http.routers.syncthing-docker-config.tls.domains[0].sans: "*.{{ ansible_nas_domain }}"
+      traefik.http.services.syncthing-docker-config.loadbalancer.server.port: "8384"
