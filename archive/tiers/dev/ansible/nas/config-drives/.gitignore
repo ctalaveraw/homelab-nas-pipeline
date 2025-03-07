@@ -1,0 +1,6 @@
+inventories/*
+!inventories/sample
+site
+*.retry
+*.log
+.cache

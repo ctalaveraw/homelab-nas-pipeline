@@ -1,0 +1,22 @@
+---
+yourls_enabled: false
+yourls_available_externally: false
+
+# Networking
+yourls_port: "10180"
+
+# Container
+yourls_memory: 1g
+
+# DB
+yourls_db_name: "mysql"
+yourls_db_container_name: "{{ yourls_hostname }}-mysql" 
+yourls_db_pass: "FHdzg7dBu70yZAypldjGkGq" # change if needed
+
+# Config
+yourls_hostname: "yourls"
+yourls_container_name: "{{ yourls_hostname }}-ui" 
+yourls_config_username: "root"
+# yourls_config_sitename: "https://{{ yourls_hostname }}.{{ ansible_nas_domain }}"
+yourls_config_sitename: "http://{{ ansible_nas_host_ip }}"
+yourls_config_password: "{{ ansible_nas_email_password }}" # change if needed

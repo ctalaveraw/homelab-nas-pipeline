@@ -1,0 +1,42 @@
+---
+- name: edit fstab to mount parity disk 0 on boot
+  ansible.posix.mount:
+    path: "{{ parity0_mount_path }}"
+    fstype: "{{ parity0_filesystem }}"
+    src: "UUID={{ parity0_uuid }}"
+    state: mounted
+
+- name: edit fstab to mount data disk 0 on boot
+  ansible.posix.mount:
+    path: "{{ disk0_mount_path }}"
+    fstype: "{{ disk0_filesystem }}"
+    src: "UUID={{ disk0_uuid }}"
+    state: mounted
+
+- name: edit fstab to mount data disk 1 on boot
+  ansible.posix.mount:
+    path: "{{ disk1_mount_path }}"
+    fstype: "{{ disk1_filesystem }}"
+    src: "UUID={{ disk1_uuid }}"
+    state: mounted
+
+- name: edit fstab to mount data disk 2 on boot
+  ansible.posix.mount:
+    path: "{{ disk2_mount_path }}"
+    fstype: "{{ disk2_filesystem }}"
+    src: "UUID={{ disk2_uuid }}"
+    state: mounted
+
+- name: edit fstab to mount data disk 3 on boot
+  ansible.posix.mount:
+    path: "{{ disk3_mount_path }}"
+    fstype: "{{ disk3_filesystem }}"
+    src: "UUID={{ disk3_uuid }}"
+    state: mounted
+
+- name: edit fstab to mount data disk 4 on boot
+  ansible.posix.mount:
+    path: "{{ disk4_mount_path }}"
+    fstype: "{{ disk4_filesystem }}"
+    src: "UUID={{ disk4_uuid }}"
+    state: mounted
